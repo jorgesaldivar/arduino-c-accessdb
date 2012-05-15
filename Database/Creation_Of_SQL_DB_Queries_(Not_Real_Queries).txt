@@ -1,0 +1,89 @@
+create database SistemaNomina;
+
+use SistemaNomina;
+
+CREATE TABLE Empleado
+(
+	NominaEmpleado INT,
+	Nombre VARCHAR(15),
+	Apellido VARCHAR(15),
+	FechaNacimiento DATE,
+	Sexo CHAR(1),
+	Edad INT,
+	IDGaffete VARCHAR(20),
+	IDTipoEmpleado INT,
+	Salario DECIMAL(10,2),
+	SalarioExtra DECIMAL(10,2),
+	PRIMARY KEY(NominaEmpleado),
+	UNIQUE (IDGaffete)
+);
+
+CREATE TABLE Nomina
+(
+	IDNomina INT AUTO_INCREMENT,
+	NominaEmpleado INT,
+	PeriodoContable INT,
+	InicioPeriodoContable DATE,
+	FinPeriodoContable DATE,
+	IngresoHorasDeTrabajo DECIMAL(10,2),
+	IngresoHorasExtra DECIMAL(10,2),
+	IngresoNeto DECIMAL(10,2),
+	ISPT DECIMAL(10,2),
+	IMSS DECIMAL(10,2),
+	PagoTotal DECIMAL(10,2),
+	PRIMARY KEY (IDNomina),
+	FOREIGN KEY(NominaEmpleado) REFERENCES Empleado(NominaEmpleado)
+);
+
+CREATE TABLE AsistenciaDiaria(
+	IDAsistenciaDiaria INT AUTO_INCREMENT,
+	Fecha DATE,
+	HorasDeTrabajo INT,
+	HorasExtra INT,
+	NominaEmpleado INT,
+	PRIMARY KEY(IDAsistenciaDiaria),
+	FOREIGN KEY(NominaEmpleado) REFERENCES Empleado(NominaEmpleado)
+);
+
+CREATE TABLE LogAccesos(
+	IDLogAccesos INT AUTO_INCREMENT,
+	IDGaffete VARCHAR(20),
+	Puerta INT,
+	Fecha DATE,
+	Hora DATE,
+	Autorizado INT,
+	PRIMARY KEY(IDLogAccesos),
+	FOREIGN KEY(IDGaffete) REFERENCES Empleado(IDGaffete)
+);
+
+CREATE TABLE Puertas
+(
+	IDGaffete VARCHAR(20),
+	Puerta INT,
+	PRIMARY KEY(IDGaffete, Puerta),
+	FOREIGN KEY(IDGaffete) REFERENCES Empleado (IDGaffete)	
+);
+
+CREATE TABLE Restricciones
+(
+	IDGaffete VARCHAR(20),
+	Lu_ViMin DATE,
+	Lu_ViMax DATE,
+	SabadoMin DATE,
+	SabadoMax DATE,
+	DomingoMin DATE,
+	DomingoMax DATE,
+	PRIMARY KEY(IDGaffete),
+	FOREIGN KEY (IDGaffete) REFERENCES Empleado (IDGaffete)
+);
+
+CREATE TABLE LogAsistencia
+(
+	IDAsistencia INT AUTO_INCREMENT,
+	IDGaffete VARCHAR(20),
+	Entrada DATE,
+	Salida DATE,
+	HorasTrabajadas INT,
+	PRIMARY KEY(IDAsistencia),
+	FOREIGN KEY(IDGaffete) REFERENCES LogAccesos (IDGaffete)
+);
